@@ -1,0 +1,176 @@
+# ============================================================================
+# Required Configuration
+# ============================================================================
+
+aws_region         = "us-east-1"
+create_eks_cluster = true
+eks_cluster_name   = "visionone-filesecurity"
+
+v1fs_domain_name        = "scanner.example.com"
+v1fs_registration_token = "eyJ..."
+
+# ============================================================================
+# Network Configuration
+# ============================================================================
+
+subnet_ids = [
+  "subnet-xxxxxxxxxxxxxxxxx",
+  "subnet-xxxxxxxxxxxxxxxxx",
+]
+
+# Type of subnets: "public" or "private"
+# Use "private" if deploying in private subnets with NAT gateway
+subnet_type = "public"
+
+# Optional: Specify VPC ID explicitly (auto-detected from subnets if not provided)
+# vpc_id = "vpc-xxxxxxxxxxxxxxxxx"
+
+# ============================================================================
+# AWS Load Balancer Controller
+# ============================================================================
+
+# Create AWS Load Balancer Controller (required for gRPC ingress)
+create_alb_controller = true
+
+# ALB scheme: "internet-facing" or "internal"
+# Use "internal" for private deployments accessible only within VPC
+alb_scheme = "internet-facing"
+
+# Advanced: Control specific resources if they already exist in the cluster
+# create_alb_controller_iam_role        = true  # Create IAM role
+# create_alb_controller_service_account = true  # Create ServiceAccount
+# create_alb_controller_helm_release    = true  # Create Helm release
+
+# Subnet tag management (WARNING: elb tags are shared across clusters)
+# manage_network_cluster_tag = true  # Manage kubernetes.io/cluster/<name> tag
+# manage_network_elb_tag     = true  # Manage kubernetes.io/role/elb tag (set false if subnets are shared)
+
+# ============================================================================
+# TLS Certificate & DNS Configuration
+# ============================================================================
+
+certificate_arn        = "arn:aws:acm:us-east-1:123456789012:certificate/yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
+manage_route53_records = true
+route53_zone_id        = "Zxxxxxxxxxx"
+
+# ============================================================================
+# Optional: AWS Authentication
+# ============================================================================
+
+# Specify AWS CLI profile if not using default credentials
+# aws_profile = "dev"
+
+# ============================================================================
+# ICAP Configuration - WARNING: NOT READY
+# ============================================================================
+# ICAP protocol is currently NOT supported. Only gRPC is stable.
+# DO NOT enable ICAP - it is under development.
+# ============================================================================
+enable_icap = false
+
+# DO NOT ENABLE - ICAP is not ready:
+# enable_icap      = true
+# icap_port        = 1344
+# nlb_scheme       = "internet-facing"
+# icap_certificate_arn = "arn:aws:acm:us-east-1:123456789012:certificate/yyyyyyyy-yyyy-yyyy-yyyy-yyyyyyyyyyyy"
+
+# ============================================================================
+# Vision One File Security Configuration
+# ============================================================================
+
+# Namespace configuration
+v1fs_namespace        = "visionone-filesecurity"
+create_v1fs_namespace = true
+
+# If using existing namespace (e.g., "default"), set:
+# v1fs_namespace        = "default"
+# create_v1fs_namespace = false
+
+# Scanner configuration
+v1fs_scanner_replicas = 1
+
+# Optional: Resource requests (for production, use higher values)
+# v1fs_scanner_cpu_request    = "800m"  # Default: 800m
+# v1fs_scanner_memory_request = "2Gi"    # Default: 2Gi
+
+# ============================================================================
+# Optional: EKS Cluster Configuration (when create_eks_cluster = true)
+# ============================================================================
+
+# Kubernetes version
+# eks_cluster_version = "1.34"
+
+# Node group configuration
+# node_group_type         = "on-demand"  # or "spot" for cost savings (less stable)
+# node_group_min_size     = 2
+# node_group_max_size     = 6
+# node_group_desired_size = 2
+# node_instance_types     = ["t3.xlarge"]
+# node_disk_size          = 100
+
+# ============================================================================
+# Optional: Management Service (ONTAP Plugin)
+# ============================================================================
+
+# Enable management service for NetApp ONTAP integration
+# v1fs_management_enabled = true
+# v1fs_management_plugins = [
+#   {
+#     name    = "ontap-agent"
+#     enabled = true
+#   }
+# ]
+
+# ============================================================================
+# EBS CSI Driver & Storage Configuration
+# ============================================================================
+
+# Create EBS CSI Driver (required for database persistent storage)
+create_ebs_csi_driver = true
+
+# Advanced: Control specific resources if they already exist in the cluster
+# create_ebs_csi_driver_iam_role       = true  # Create IAM role
+# create_ebs_csi_driver_addon          = true  # Create EKS addon
+# create_ebs_csi_driver_storage_class  = true  # Create StorageClass
+
+# StorageClass configuration
+# v1fs_database_storage_class_name = "visionone-filesecurity-storage"
+# ebs_volume_type                  = "gp3"    # Options: gp3 (recommended), gp2, io1, io2
+# ebs_encrypted                    = true     # Encrypt EBS volumes (recommended)
+# storage_class_reclaim_policy     = "Delete" # Use "Retain" for production to preserve data
+# set_storage_class_as_default     = false    # Set as cluster default StorageClass
+
+# EBS CSI driver version (null = latest compatible version)
+# ebs_csi_driver_version = null
+
+# ============================================================================
+# Optional: Database Configuration (for Management Service)
+# ============================================================================
+
+# Enable PostgreSQL database for management service persistence
+# v1fs_management_db_enabled = true
+
+# Database storage configuration
+# v1fs_database_persistence_size = "100Gi"  # Default: 100Gi
+
+# ============================================================================
+# Example: Using Existing EKS Cluster
+# ============================================================================
+# If deploying to an existing EKS cluster, use these settings:
+#
+# create_eks_cluster = false
+# eks_cluster_name   = "my-existing-cluster"
+#
+# If the cluster already has ALB Controller installed:
+# create_alb_controller = false
+#
+# If ALB Controller is not installed but subnets are shared with other clusters:
+# create_alb_controller      = true
+# manage_network_elb_tag     = false  # Don't manage shared elb tags (prevent deletion on destroy)
+# manage_network_cluster_tag = true   # Cluster-specific tag is safe to manage
+#
+# If the cluster already has EBS CSI Driver but you need a new StorageClass:
+# create_ebs_csi_driver               = true
+# create_ebs_csi_driver_iam_role      = false
+# create_ebs_csi_driver_addon         = false
+# create_ebs_csi_driver_storage_class = true  # Create new StorageClass

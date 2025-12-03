@@ -1,0 +1,12 @@
+terraform {
+  backend "s3" {
+    bucket = ""
+    key    = ""
+    region = ""
+    #profile = "dev"
+
+    use_lockfile = true
+
+    encrypt = true
+  }
+}

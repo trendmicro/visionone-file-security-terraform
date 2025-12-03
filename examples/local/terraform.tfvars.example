@@ -1,0 +1,95 @@
+# ============================================================================
+# Required Configuration
+# ============================================================================
+
+# Vision One registration token (obtain from Vision One console)
+v1fs_registration_token = "eyJ..."
+
+# ============================================================================
+# Ingress Controller Configuration
+# ============================================================================
+
+# Install NGINX Ingress Controller (required for HTTP/gRPC ingress)
+# install_nginx_ingress_controller = true
+
+# Service type: "NodePort" for local K8s, "LoadBalancer" for cloud K8s
+# nginx_service_type = "NodePort"
+
+# NGINX Ingress Controller version
+# nginx_ingress_controller_version = "4.14.0"
+
+# ============================================================================
+# Vision One File Security Configuration
+# ============================================================================
+
+# Project name (used as prefix for resources)
+# project_name = "v1fs"
+
+# Domain name for scanner service
+# v1fs_domain_name = "scanner.local.k8s"
+
+# Helm chart version
+# v1fs_helm_chart_version = "1.4.0"
+
+# ============================================================================
+# Namespace Configuration
+# ============================================================================
+
+# Namespace configuration
+# v1fs_namespace        = "visionone-filesecurity"
+# create_v1fs_namespace = true
+
+# If using existing namespace (e.g., "default"), set:
+# v1fs_namespace        = "default"
+# create_v1fs_namespace = false
+
+# ============================================================================
+# Scanner Configuration
+# ============================================================================
+
+# Number of scanner replicas
+# v1fs_scanner_replicas = 1  # Default: 1 for local, 2 for production
+
+# Resource requests (adjust based on your local environment)
+# v1fs_scanner_cpu_request    = "800m"  # Default: 800m
+# v1fs_scanner_memory_request = "2Gi"   # Default: 2Gi
+
+# Autoscaling (for production environments)
+# v1fs_scanner_autoscaling_enabled      = false
+# v1fs_scanner_autoscaling_min_replicas = 1
+# v1fs_scanner_autoscaling_max_replicas = 10
+
+# ============================================================================
+# Optional: Management Service (ONTAP Plugin)
+# ============================================================================
+
+# Enable management service for NetApp ONTAP integration
+# v1fs_management_enabled = true
+# v1fs_management_db_enabled            = true
+# v1fs_database_persistence_enabled     = true
+# v1fs_database_storage_class_host_path = "/tmp/postgres-data"
+# v1fs_management_plugins = [
+#   {
+#     name               = "ontap-agent"
+#     enabled            = true
+#     configMapName      = "ontap-agent-config"
+#     securitySecretName = "ontap-agent-security"
+#     jwtSecretName      = "ontap-agent-jwt"
+#   }
+# ]
+
+
+# ============================================================================
+# Optional: Advanced Configuration
+# ============================================================================
+
+# Log level: DEBUG, INFO, WARN, ERROR
+# v1fs_log_level = "INFO"
+
+# Enable scan result caching with Redis/Valkey
+# v1fs_enable_scan_cache = true
+
+# HTTP/HTTPS proxy (if required)
+# v1fs_proxy_url = "http://proxy.example.com:8080"
+
+# v1fs_image_pull_secrets               = ["ecr-registry-secret"]
