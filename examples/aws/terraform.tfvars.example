@@ -116,8 +116,11 @@ v1fs_scanner_replicas = 1
 # v1fs_management_enabled = true
 # v1fs_management_plugins = [
 #   {
-#     name    = "ontap-agent"
-#     enabled = true
+#     name               = "ontap-agent"
+#     enabled            = true
+#     configMapName      = "ontap-agent-config"
+#     securitySecretName = "ontap-agent-security"
+#     jwtSecretName      = "ontap-agent-jwt"
 #   }
 # ]
 

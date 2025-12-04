@@ -505,11 +505,14 @@ variable "v1fs_management_memory_request" {
 variable "v1fs_management_plugins" {
   description = <<-EOT
     List of plugins to enable for management service.
-    Each plugin is a map with plugin-specific fields.
+    Each plugin requires ALL fields to be specified.
 
-    Common fields:
-      - name    (required) - Plugin identifier
-      - enabled (required) - Whether the plugin is enabled
+    Required fields for ontap-agent:
+      - name               (required) - Plugin identifier (e.g., "ontap-agent")
+      - enabled            (required) - Whether the plugin is enabled
+      - configMapName      (required) - Name of the ConfigMap for plugin configuration
+      - securitySecretName (required) - Name of the Secret for security credentials
+      - jwtSecretName      (required) - Name of the Secret for JWT token
 
     Example (ontap-agent):
       v1fs_management_plugins = [

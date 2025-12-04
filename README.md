@@ -78,8 +78,11 @@ module "v1fs" {
   enable_management = true
   management_plugins = [
     {
-      name    = "ontap-agent"
-      enabled = true
+      name               = "ontap-agent"
+      enabled            = true
+      configMapName      = "ontap-agent-config"
+      securitySecretName = "ontap-agent-security"
+      jwtSecretName      = "ontap-agent-jwt"
     }
   ]
 
@@ -241,7 +244,7 @@ No modules.
 | <a name="input_management_cpu_request"></a> [management\_cpu\_request](#input\_management\_cpu\_request) | CPU request for management service pods | `string` | `"250m"` | no |
 | <a name="input_management_extra_ingress_annotations"></a> [management\_extra\_ingress\_annotations](#input\_management\_extra\_ingress\_annotations) | Additional annotations for management ingress (merged with defaults) | `map(string)` | `{}` | no |
 | <a name="input_management_memory_request"></a> [management\_memory\_request](#input\_management\_memory\_request) | Memory request for management service pods | `string` | `"256Mi"` | no |
-| <a name="input_management_plugins"></a> [management\_plugins](#input\_management\_plugins) | Management service plugins configuration.<br/>Each plugin is a map with plugin-specific fields.<br/><br/>Common fields:<br/>  - name    (required) - Plugin identifier<br/>  - enabled (required) - Whether the plugin is enabled<br/><br/>Example (ontap-agent):<br/>  management\_plugins = [<br/>    {<br/>      name               = "ontap-agent"<br/>      enabled            = true<br/>      configMapName      = "ontap-agent-config"<br/>      securitySecretName = "ontap-agent-security"<br/>      jwtSecretName      = "ontap-agent-jwt"<br/>    }<br/>  ] | `list(map(any))` | `[]` | no |
+| <a name="input_management_plugins"></a> [management\_plugins](#input\_management\_plugins) | Management service plugins configuration.<br/>Each plugin requires ALL fields to be specified.<br/><br/>Required fields for ontap-agent:<br/>  - name               (required) - Plugin identifier (e.g., "ontap-agent")<br/>  - enabled            (required) - Whether the plugin is enabled<br/>  - configMapName      (required) - Name of the ConfigMap for plugin configuration<br/>  - securitySecretName (required) - Name of the Secret for security credentials<br/>  - jwtSecretName      (required) - Name of the Secret for JWT token<br/><br/>Example (ontap-agent):<br/>  management\_plugins = [<br/>    {<br/>      name               = "ontap-agent"<br/>      enabled            = true<br/>      configMapName      = "ontap-agent-config"<br/>      securitySecretName = "ontap-agent-security"<br/>      jwtSecretName      = "ontap-agent-jwt"<br/>    }<br/>  ] | `list(map(any))` | `[]` | no |
 | <a name="input_management_websocket_prefix"></a> [management\_websocket\_prefix](#input\_management\_websocket\_prefix) | WebSocket path prefix for the management service | `string` | `"/ontap"` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | Kubernetes namespace for V1FS deployment | `string` | `"visionone-filesecurity"` | no |
 | <a name="input_no_proxy"></a> [no\_proxy](#input\_no\_proxy) | Comma-separated no\_proxy list for all V1FS components | `string` | `"localhost,127.0.0.1,.svc.cluster.local"` | no |
