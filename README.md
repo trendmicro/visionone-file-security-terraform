@@ -17,7 +17,7 @@ module "v1fs" {
   source = "../../modules/v1fs"
 
   release_name       = "v1fs"
-  chart_version      = "1.4.0"
+  chart_version      = "1.4.1"
   namespace          = "visionone-filesecurity"
   registration_token = var.registration_token
 
@@ -39,7 +39,7 @@ module "v1fs" {
   source = "../../modules/v1fs"
 
   release_name       = "v1fs"
-  chart_version      = "1.4.0"
+  chart_version      = "1.4.1"
   namespace          = "visionone-filesecurity"
   registration_token = var.registration_token
 
@@ -66,7 +66,7 @@ module "v1fs" {
   source = "../../modules/v1fs"
 
   release_name       = "v1fs"
-  chart_version      = "1.4.0"
+  chart_version      = "1.4.1"
   namespace          = "visionone-filesecurity"
   registration_token = var.registration_token
 
@@ -117,7 +117,7 @@ To upgrade Vision One File Security to a newer version, simply update the `chart
 
 ```hcl
 # Before
-chart_version = "1.4.0"
+chart_version = "1.4.1"
 
 # After
 chart_version = "1.5.0"
@@ -234,12 +234,18 @@ No modules.
 | <a name="input_enable_management_db"></a> [enable\_management\_db](#input\_enable\_management\_db) | Whether to enable PostgreSQL database container for management service. Requires enable\_management = true. | `bool` | `false` | no |
 | <a name="input_enable_scan_cache"></a> [enable\_scan\_cache](#input\_enable\_scan\_cache) | Enable scan result caching | `bool` | `true` | no |
 | <a name="input_enable_scanner_autoscaling"></a> [enable\_scanner\_autoscaling](#input\_enable\_scanner\_autoscaling) | Whether to enable autoscaling for scanner | `bool` | `false` | no |
+| <a name="input_enable_telemetry_kube_state_metrics"></a> [enable\_telemetry\_kube\_state\_metrics](#input\_enable\_telemetry\_kube\_state\_metrics) | Whether to enable kube-state-metrics for Kubernetes resource metrics | `bool` | `true` | no |
+| <a name="input_enable_telemetry_prometheus"></a> [enable\_telemetry\_prometheus](#input\_enable\_telemetry\_prometheus) | Whether to enable Prometheus agent for metrics collection and forwarding to Vision One | `bool` | `true` | no |
 | <a name="input_extra_helm_values"></a> [extra\_helm\_values](#input\_extra\_helm\_values) | Additional Helm values as a list of YAML strings. Applied after module defaults.<br/>Later entries override earlier ones using Helm's deep merge strategy.<br/>Useful for injecting values from files or complex configurations not covered by module variables.<br/><br/>Example:<br/>  extra\_helm\_values = [<br/>    file("custom-values.yaml"),<br/>    yamlencode({<br/>      scanner = {<br/>        nodeSelector = { "node-type" = "scanner" }<br/>        tolerations = [{<br/>          key    = "dedicated"<br/>          value  = "scanner"<br/>          effect = "NoSchedule"<br/>        }]<br/>      }<br/>    })<br/>  ] | `list(string)` | `[]` | no |
 | <a name="input_icap_certificate_arn"></a> [icap\_certificate\_arn](#input\_icap\_certificate\_arn) | ACM certificate ARN for ICAP TLS (optional) | `string` | `""` | no |
 | <a name="input_icap_nlb_scheme"></a> [icap\_nlb\_scheme](#input\_icap\_nlb\_scheme) | NLB scheme for ICAP: internet-facing or internal | `string` | `"internet-facing"` | no |
 | <a name="input_icap_port"></a> [icap\_port](#input\_icap\_port) | ICAP service port | `number` | `1344` | no |
 | <a name="input_image_pull_secrets"></a> [image\_pull\_secrets](#input\_image\_pull\_secrets) | List of Kubernetes secret names for pulling images from private registries.<br/>Applied globally to all V1FS components (scanner, scanCache, backendCommunicator, managementService, databaseContainer).<br/><br/>Example: image\_pull\_secrets = ["my-registry-secret"] | `list(string)` | `[]` | no |
 | <a name="input_ingress_class_name"></a> [ingress\_class\_name](#input\_ingress\_class\_name) | Ingress class name (e.g., 'alb', 'nginx', 'gce') | `string` | `"alb"` | no |
+| <a name="input_kube_state_metrics_cpu_limit"></a> [kube\_state\_metrics\_cpu\_limit](#input\_kube\_state\_metrics\_cpu\_limit) | CPU limit for kube-state-metrics pods | `string` | `"100m"` | no |
+| <a name="input_kube_state_metrics_cpu_request"></a> [kube\_state\_metrics\_cpu\_request](#input\_kube\_state\_metrics\_cpu\_request) | CPU request for kube-state-metrics pods | `string` | `"50m"` | no |
+| <a name="input_kube_state_metrics_memory_limit"></a> [kube\_state\_metrics\_memory\_limit](#input\_kube\_state\_metrics\_memory\_limit) | Memory limit for kube-state-metrics pods | `string` | `"128Mi"` | no |
+| <a name="input_kube_state_metrics_memory_request"></a> [kube\_state\_metrics\_memory\_request](#input\_kube\_state\_metrics\_memory\_request) | Memory request for kube-state-metrics pods | `string` | `"64Mi"` | no |
 | <a name="input_log_level"></a> [log\_level](#input\_log\_level) | Log level for V1FS services | `string` | `"INFO"` | no |
 | <a name="input_management_cpu_request"></a> [management\_cpu\_request](#input\_management\_cpu\_request) | CPU request for management service pods | `string` | `"250m"` | no |
 | <a name="input_management_extra_ingress_annotations"></a> [management\_extra\_ingress\_annotations](#input\_management\_extra\_ingress\_annotations) | Additional annotations for management ingress (merged with defaults) | `map(string)` | `{}` | no |
@@ -248,6 +254,16 @@ No modules.
 | <a name="input_management_websocket_prefix"></a> [management\_websocket\_prefix](#input\_management\_websocket\_prefix) | WebSocket path prefix for the management service | `string` | `"/ontap"` | no |
 | <a name="input_namespace"></a> [namespace](#input\_namespace) | Kubernetes namespace for V1FS deployment | `string` | `"visionone-filesecurity"` | no |
 | <a name="input_no_proxy"></a> [no\_proxy](#input\_no\_proxy) | Comma-separated no\_proxy list for all V1FS components | `string` | `"localhost,127.0.0.1,.svc.cluster.local"` | no |
+| <a name="input_prometheus_cpu_limit"></a> [prometheus\_cpu\_limit](#input\_prometheus\_cpu\_limit) | CPU limit for Prometheus agent pods | `string` | `"200m"` | no |
+| <a name="input_prometheus_cpu_request"></a> [prometheus\_cpu\_request](#input\_prometheus\_cpu\_request) | CPU request for Prometheus agent pods | `string` | `"100m"` | no |
+| <a name="input_prometheus_init_cpu_limit"></a> [prometheus\_init\_cpu\_limit](#input\_prometheus\_init\_cpu\_limit) | CPU limit for Prometheus init container | `string` | `"100m"` | no |
+| <a name="input_prometheus_init_cpu_request"></a> [prometheus\_init\_cpu\_request](#input\_prometheus\_init\_cpu\_request) | CPU request for Prometheus init container | `string` | `"50m"` | no |
+| <a name="input_prometheus_init_memory_limit"></a> [prometheus\_init\_memory\_limit](#input\_prometheus\_init\_memory\_limit) | Memory limit for Prometheus init container | `string` | `"128Mi"` | no |
+| <a name="input_prometheus_init_memory_request"></a> [prometheus\_init\_memory\_request](#input\_prometheus\_init\_memory\_request) | Memory request for Prometheus init container | `string` | `"64Mi"` | no |
+| <a name="input_prometheus_log_level"></a> [prometheus\_log\_level](#input\_prometheus\_log\_level) | Log level for Prometheus agent (debug, info, warn, error) | `string` | `"info"` | no |
+| <a name="input_prometheus_memory_limit"></a> [prometheus\_memory\_limit](#input\_prometheus\_memory\_limit) | Memory limit for Prometheus agent pods | `string` | `"256Mi"` | no |
+| <a name="input_prometheus_memory_request"></a> [prometheus\_memory\_request](#input\_prometheus\_memory\_request) | Memory request for Prometheus agent pods | `string` | `"128Mi"` | no |
+| <a name="input_prometheus_scrape_interval"></a> [prometheus\_scrape\_interval](#input\_prometheus\_scrape\_interval) | Prometheus scrape interval (e.g., '60s', '30s') | `string` | `"60s"` | no |
 | <a name="input_proxy_url"></a> [proxy\_url](#input\_proxy\_url) | HTTP/HTTPS proxy URL | `string` | `""` | no |
 | <a name="input_registration_token"></a> [registration\_token](#input\_registration\_token) | Vision One registration token | `string` | n/a | yes |
 | <a name="input_release_name"></a> [release\_name](#input\_release\_name) | Helm release name | `string` | n/a | yes |
