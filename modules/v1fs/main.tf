@@ -507,6 +507,146 @@ locals {
     affinity     = {}
   }
 
+  telemetry_config = {
+    prometheusAgent = {
+      enabled      = var.enable_telemetry_prometheus
+      replicaCount = var.enable_telemetry_prometheus ? 1 : 0
+
+      imagePullSecrets = local.image_pull_secrets_formatted
+
+      initContainer = {
+        logLevel = var.prometheus_log_level
+        resources = {
+          requests = {
+            cpu    = var.prometheus_init_cpu_request
+            memory = var.prometheus_init_memory_request
+          }
+          limits = {
+            cpu    = var.prometheus_init_cpu_limit
+            memory = var.prometheus_init_memory_limit
+          }
+        }
+      }
+
+      config = {
+        scrapeInterval     = var.prometheus_scrape_interval
+        evaluationInterval = var.prometheus_scrape_interval
+      }
+
+      logLevel = var.prometheus_log_level
+
+      serviceAccount = {
+        create      = var.enable_telemetry_prometheus
+        automount   = var.enable_telemetry_prometheus
+        annotations = {}
+        name        = ""
+      }
+
+      rbac = {
+        create = var.enable_telemetry_prometheus
+      }
+
+      podAnnotations     = {}
+      podLabels          = {}
+      podSecurityContext = {}
+      securityContext    = {}
+
+      livenessProbe = {
+        httpGet = {
+          path = "/-/healthy"
+          port = 9090
+        }
+        initialDelaySeconds = 30
+        periodSeconds       = 10
+      }
+
+      readinessProbe = {
+        httpGet = {
+          path = "/-/ready"
+          port = 9090
+        }
+        initialDelaySeconds = 10
+        periodSeconds       = 5
+      }
+
+      resources = {
+        requests = {
+          cpu    = var.prometheus_cpu_request
+          memory = var.prometheus_memory_request
+        }
+        limits = {
+          cpu    = var.prometheus_cpu_limit
+          memory = var.prometheus_memory_limit
+        }
+      }
+
+      nodeSelector = {}
+      tolerations  = []
+      affinity     = {}
+    }
+
+    kubeStateMetrics = {
+      enabled      = var.enable_telemetry_kube_state_metrics
+      replicaCount = var.enable_telemetry_kube_state_metrics ? 1 : 0
+
+      imagePullSecrets = local.image_pull_secrets_formatted
+
+      serviceAccount = {
+        create      = var.enable_telemetry_kube_state_metrics
+        automount   = var.enable_telemetry_kube_state_metrics
+        annotations = {}
+        name        = ""
+      }
+
+      rbac = {
+        create = var.enable_telemetry_kube_state_metrics
+      }
+
+      podAnnotations     = {}
+      podLabels          = {}
+      podSecurityContext = {}
+      securityContext    = {}
+
+      service = {
+        type = "ClusterIP"
+        port = 8080
+      }
+
+      livenessProbe = {
+        httpGet = {
+          path = "/healthz"
+          port = 8080
+        }
+        initialDelaySeconds = 5
+        periodSeconds       = 10
+      }
+
+      readinessProbe = {
+        httpGet = {
+          path = "/healthz"
+          port = 8080
+        }
+        initialDelaySeconds = 5
+        periodSeconds       = 10
+      }
+
+      resources = {
+        requests = {
+          cpu    = var.kube_state_metrics_cpu_request
+          memory = var.kube_state_metrics_memory_request
+        }
+        limits = {
+          cpu    = var.kube_state_metrics_cpu_limit
+          memory = var.kube_state_metrics_memory_limit
+        }
+      }
+
+      nodeSelector = {}
+      tolerations  = []
+      affinity     = {}
+    }
+  }
+
   # Merge all configurations
   helm_values = merge(
     {
@@ -516,6 +656,7 @@ locals {
       scanCache             = local.scan_cache_config
       backendCommunicator   = local.backend_communicator_config
       databaseContainer     = local.database_config
+      telemetry             = local.telemetry_config
     },
     local.icap_config
   )
@@ -539,6 +680,33 @@ resource "null_resource" "cleanup_database_pvc" {
       else
         echo "WARNING: kubectl not found. Manual PVC cleanup required:"
         echo "  kubectl delete pvc -l app.kubernetes.io/instance=${self.triggers.release_name} -n ${self.triggers.namespace}"
+      fi
+    EOT
+
+    on_failure = continue
+  }
+
+  depends_on = [
+    helm_release.v1fs,
+  ]
+}
+
+resource "null_resource" "cleanup_cluster_resources" {
+  triggers = {
+    release_name = var.release_name
+  }
+
+  provisioner "local-exec" {
+    when    = destroy
+    command = <<-EOT
+      if command -v kubectl >/dev/null 2>&1; then
+        echo "Cleaning up cluster-scoped resources for release ${self.triggers.release_name}..."
+        kubectl delete clusterrole,clusterrolebinding \
+          -l app.kubernetes.io/instance=${self.triggers.release_name} \
+          -l app.kubernetes.io/name=visionone-filesecurity \
+          --ignore-not-found=true 2>/dev/null || true
+      else
+        echo "WARNING: kubectl not found. Manual cleanup may be required for ClusterRole and ClusterRoleBinding"
       fi
     EOT
 

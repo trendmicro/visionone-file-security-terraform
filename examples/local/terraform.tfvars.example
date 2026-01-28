@@ -29,7 +29,7 @@ v1fs_registration_token = "eyJ..."
 # v1fs_domain_name = "scanner.local.k8s"
 
 # Helm chart version
-# v1fs_helm_chart_version = "1.4.0"
+# v1fs_helm_chart_version = "1.4.2"
 
 # ============================================================================
 # Namespace Configuration
@@ -65,7 +65,7 @@ v1fs_registration_token = "eyJ..."
 
 # Enable management service for NetApp ONTAP integration
 # v1fs_management_enabled = true
-# v1fs_management_db_enabled            = true
+# enable_v1fs_management_db             = true
 # v1fs_database_persistence_enabled     = true
 # v1fs_database_storage_class_host_path = "/tmp/postgres-data"
 # v1fs_management_plugins = [
