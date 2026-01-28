@@ -151,7 +151,7 @@ create_ebs_csi_driver = true
 # ============================================================================
 
 # Enable PostgreSQL database for management service persistence
-# v1fs_management_db_enabled = true
+# enable_v1fs_management_db = true
 
 # Database storage configuration
 # v1fs_database_persistence_size = "100Gi"  # Default: 100Gi

@@ -348,6 +348,102 @@ variable "database_storage_class_reclaim_policy" {
   }
 }
 
+variable "enable_telemetry_prometheus" {
+  description = "Whether to enable Prometheus agent for metrics collection and forwarding to Vision One"
+  type        = bool
+  default     = true
+}
+
+variable "prometheus_cpu_request" {
+  description = "CPU request for Prometheus agent pods"
+  type        = string
+  default     = "100m"
+}
+
+variable "prometheus_cpu_limit" {
+  description = "CPU limit for Prometheus agent pods"
+  type        = string
+  default     = "200m"
+}
+
+variable "prometheus_memory_request" {
+  description = "Memory request for Prometheus agent pods"
+  type        = string
+  default     = "128Mi"
+}
+
+variable "prometheus_memory_limit" {
+  description = "Memory limit for Prometheus agent pods"
+  type        = string
+  default     = "256Mi"
+}
+
+variable "prometheus_scrape_interval" {
+  description = "Prometheus scrape interval (e.g., '60s', '30s')"
+  type        = string
+  default     = "60s"
+}
+
+variable "prometheus_log_level" {
+  description = "Log level for Prometheus agent (debug, info, warn, error)"
+  type        = string
+  default     = "info"
+}
+
+variable "prometheus_init_cpu_request" {
+  description = "CPU request for Prometheus init container"
+  type        = string
+  default     = "50m"
+}
+
+variable "prometheus_init_cpu_limit" {
+  description = "CPU limit for Prometheus init container"
+  type        = string
+  default     = "100m"
+}
+
+variable "prometheus_init_memory_request" {
+  description = "Memory request for Prometheus init container"
+  type        = string
+  default     = "64Mi"
+}
+
+variable "prometheus_init_memory_limit" {
+  description = "Memory limit for Prometheus init container"
+  type        = string
+  default     = "128Mi"
+}
+
+variable "enable_telemetry_kube_state_metrics" {
+  description = "Whether to enable kube-state-metrics for Kubernetes resource metrics"
+  type        = bool
+  default     = true
+}
+
+variable "kube_state_metrics_cpu_request" {
+  description = "CPU request for kube-state-metrics pods"
+  type        = string
+  default     = "50m"
+}
+
+variable "kube_state_metrics_cpu_limit" {
+  description = "CPU limit for kube-state-metrics pods"
+  type        = string
+  default     = "100m"
+}
+
+variable "kube_state_metrics_memory_request" {
+  description = "Memory request for kube-state-metrics pods"
+  type        = string
+  default     = "64Mi"
+}
+
+variable "kube_state_metrics_memory_limit" {
+  description = "Memory limit for kube-state-metrics pods"
+  type        = string
+  default     = "128Mi"
+}
+
 variable "extra_helm_values" {
   description = <<-EOT
     Additional Helm values as a list of YAML strings. Applied after module defaults.

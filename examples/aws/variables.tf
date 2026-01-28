@@ -378,7 +378,7 @@ variable "v1fs_helm_chart_name" {
 variable "v1fs_helm_chart_version" {
   description = "Version of Vision One File Security Helm chart"
   type        = string
-  default     = "1.4.0"
+  default     = "1.4.2"
 }
 
 variable "v1fs_registration_token" {
@@ -784,4 +784,100 @@ variable "v1fs_database_storage_class_name" {
   description = "StorageClass name for database persistence"
   type        = string
   default     = "visionone-filesecurity-storage"
+}
+
+variable "v1fs_database_cpu_request" {
+  description = "CPU request for database container pods"
+  type        = string
+  default     = "250m"
+}
+
+variable "v1fs_database_cpu_limit" {
+  description = "CPU limit for database container pods"
+  type        = string
+  default     = "500m"
+}
+
+variable "v1fs_database_memory_request" {
+  description = "Memory request for database container pods"
+  type        = string
+  default     = "512Mi"
+}
+
+variable "v1fs_database_memory_limit" {
+  description = "Memory limit for database container pods"
+  type        = string
+  default     = "1Gi"
+}
+
+variable "enable_v1fs_telemetry_prometheus" {
+  description = "Whether to enable Prometheus agent for metrics collection and forwarding to Vision One"
+  type        = bool
+  default     = true
+}
+
+variable "v1fs_prometheus_cpu_request" {
+  description = "CPU request for Prometheus agent pods"
+  type        = string
+  default     = "100m"
+}
+
+variable "v1fs_prometheus_cpu_limit" {
+  description = "CPU limit for Prometheus agent pods"
+  type        = string
+  default     = "200m"
+}
+
+variable "v1fs_prometheus_memory_request" {
+  description = "Memory request for Prometheus agent pods"
+  type        = string
+  default     = "128Mi"
+}
+
+variable "v1fs_prometheus_memory_limit" {
+  description = "Memory limit for Prometheus agent pods"
+  type        = string
+  default     = "256Mi"
+}
+
+variable "v1fs_prometheus_scrape_interval" {
+  description = "Prometheus scrape interval (e.g., '60s', '30s')"
+  type        = string
+  default     = "60s"
+}
+
+variable "v1fs_prometheus_log_level" {
+  description = "Log level for Prometheus agent (debug, info, warn, error)"
+  type        = string
+  default     = "info"
+}
+
+variable "enable_v1fs_telemetry_kube_state_metrics" {
+  description = "Whether to enable kube-state-metrics for Kubernetes resource metrics"
+  type        = bool
+  default     = true
+}
+
+variable "v1fs_kube_state_metrics_cpu_request" {
+  description = "CPU request for kube-state-metrics pods"
+  type        = string
+  default     = "50m"
+}
+
+variable "v1fs_kube_state_metrics_cpu_limit" {
+  description = "CPU limit for kube-state-metrics pods"
+  type        = string
+  default     = "100m"
+}
+
+variable "v1fs_kube_state_metrics_memory_request" {
+  description = "Memory request for kube-state-metrics pods"
+  type        = string
+  default     = "64Mi"
+}
+
+variable "v1fs_kube_state_metrics_memory_limit" {
+  description = "Memory limit for kube-state-metrics pods"
+  type        = string
+  default     = "128Mi"
 }

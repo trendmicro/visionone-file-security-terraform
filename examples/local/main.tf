@@ -62,8 +62,25 @@ module "v1fs" {
 
   enable_management_db             = var.enable_v1fs_management_db
   database_persistence_size        = var.v1fs_database_persistence_size
+  database_cpu_request             = var.v1fs_database_cpu_request
+  database_cpu_limit               = var.v1fs_database_cpu_limit
+  database_memory_request          = var.v1fs_database_memory_request
+  database_memory_limit            = var.v1fs_database_memory_limit
   create_database_storage_class    = true
   database_storage_class_host_path = var.v1fs_database_storage_class_host_path
+
+  enable_telemetry_prometheus         = var.enable_v1fs_telemetry_prometheus
+  prometheus_cpu_request              = var.v1fs_prometheus_cpu_request
+  prometheus_cpu_limit                = var.v1fs_prometheus_cpu_limit
+  prometheus_memory_request           = var.v1fs_prometheus_memory_request
+  prometheus_memory_limit             = var.v1fs_prometheus_memory_limit
+  prometheus_scrape_interval          = var.v1fs_prometheus_scrape_interval
+  prometheus_log_level                = var.v1fs_prometheus_log_level
+  enable_telemetry_kube_state_metrics = var.enable_v1fs_telemetry_kube_state_metrics
+  kube_state_metrics_cpu_request      = var.v1fs_kube_state_metrics_cpu_request
+  kube_state_metrics_cpu_limit        = var.v1fs_kube_state_metrics_cpu_limit
+  kube_state_metrics_memory_request   = var.v1fs_kube_state_metrics_memory_request
+  kube_state_metrics_memory_limit     = var.v1fs_kube_state_metrics_memory_limit
 
   depends_on = [
     module.nginx_ingress_controller
